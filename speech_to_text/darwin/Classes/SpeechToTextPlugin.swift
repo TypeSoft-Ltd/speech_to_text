@@ -138,7 +138,8 @@ public class SpeechToTextPlugin: NSObject, FlutterPlugin {
         let listenModeIndex = argsArr["listenMode"] as? Int,
         let sampleRate = argsArr["sampleRate"] as? Int,
         let autoPunctuation = argsArr["autoPunctuation"] as? Bool,
-        let enableHaptics = argsArr["enableHaptics"] as? Bool
+        let enableHaptics = argsArr["enableHaptics"] as? Bool,
+        let contextualStrings = argsArr["contextualStrings"] as? [String]
       else {
         DispatchQueue.main.async {
           result(
@@ -168,7 +169,7 @@ public class SpeechToTextPlugin: NSObject, FlutterPlugin {
       listenForSpeech(
         result, localeStr: localeStr, partialResults: partialResults, onDevice: onDevice,
         listenMode: listenMode, sampleRate: sampleRate, autoPunctuation: autoPunctuation,
-        enableHaptics: enableHaptics)
+        enableHaptics: enableHaptics, contextualStrings: contextualStrings)
     case SwiftSpeechToTextMethods.stop.rawValue:
       stopSpeech(result)
     case SwiftSpeechToTextMethods.cancel.rawValue:
@@ -438,7 +439,7 @@ public class SpeechToTextPlugin: NSObject, FlutterPlugin {
   private func listenForSpeech(
     _ result: @escaping FlutterResult, localeStr: String?, partialResults: Bool,
     onDevice: Bool, listenMode: ListenMode, sampleRate: Int, autoPunctuation: Bool,
-    enableHaptics: Bool
+    enableHaptics: Bool, contextualStrings: [String]?
   ) {
     if nil != currentTask || listening {
       sendBoolResult(false, result)
@@ -528,6 +529,10 @@ public class SpeechToTextPlugin: NSObject, FlutterPlugin {
       if #available(iOS 16.0, macOS 13, *) {
         currentRequest.addsPunctuation = autoPunctuation
       }
+      if let customStrings = contextualStrings, !customStrings.isEmpty {
+        currentRequest.contextualStrings = customStrings
+      }
+      
       self.currentTask = self.recognizer?.recognitionTask(with: currentRequest, delegate: self)
       let recordingFormat = inputNode?.outputFormat(forBus: self.busForNodeTap)
       var fmt: AVAudioFormat!

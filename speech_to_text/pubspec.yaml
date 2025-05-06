@@ -3,6 +3,8 @@ description: A Flutter plugin that exposes device specific speech to text recogn
 version: 7.1.0-beta.3
 homepage: https://github.com/csdcorp/speech_to_text
 
+publish_to: none
+
 environment:
   sdk: ">=3.3.0 <4.0.0"
   flutter: ">=3.10.0"
@@ -10,7 +12,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  speech_to_text_platform_interface: ^2.3.0
   json_annotation: ^4.0.0
   clock: ^1.0.1
   pedantic: ^1.9.2
@@ -18,6 +19,13 @@ dependencies:
     sdk: flutter
   meta: ^1.1.7
   web: ^1.0.0
+  speech_to_text_platform_interface:
+    path: ../speech_to_text_platform_interface
+  # speech_to_text_platform_interface:
+  #   git:
+  #     url: https://github.com/TypeSoft-Ltd/speech_to_text_platform_interface.git
+  #     ref: main
+  #     path: speech_to_text_platform_interface
 
 dev_dependencies:
   flutter_test:

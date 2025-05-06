@@ -5,8 +5,7 @@ import 'package:flutter/services.dart';
 
 import 'speech_to_text_platform_interface.dart';
 
-const MethodChannel _channel =
-    MethodChannel('plugin.csdcorp.com/speech_to_text');
+const MethodChannel _channel = MethodChannel('plugin.csdcorp.com/speech_to_text');
 
 /// An implementation of [SpeechToTextPlatform] that uses method channels.
 class MethodChannelSpeechToText extends SpeechToTextPlatform {
@@ -29,8 +28,7 @@ class MethodChannelSpeechToText extends SpeechToTextPlatform {
   }
 
   @override
-  Future<bool> initialize(
-      {debugLogging = false, List<SpeechConfigOption>? options}) async {
+  Future<bool> initialize({debugLogging = false, List<SpeechConfigOption>? options}) async {
     _channel.setMethodCallHandler(_handleCallbacks);
     var params = <String, Object>{
       'debugLogging': debugLogging,
@@ -111,6 +109,7 @@ class MethodChannelSpeechToText extends SpeechToTextPlatform {
       "sampleRate": options?.sampleRate ?? sampleRate,
       "enableHaptics": options?.enableHapticFeedback ?? false,
       "autoPunctuation": options?.autoPunctuation ?? false,
+      "contextualStrings": options?.contextualStrings,
     };
     if (null != localeId) {
       listenParams["localeId"] = localeId;

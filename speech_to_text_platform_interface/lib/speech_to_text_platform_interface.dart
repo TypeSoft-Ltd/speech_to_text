@@ -63,39 +63,46 @@ class SpeechListenOptions {
   final sampleRate;
   final autoPunctuation;
   final enableHapticFeedback;
+  final List<String> contextualStrings;
 
-  SpeechListenOptions(
-      {
-      /// If true the listen session will automatically be canceled on a permanent error.
-      this.cancelOnError = false,
+  SpeechListenOptions({
+    /// If true the listen session will automatically be canceled on a permanent error.
+    this.cancelOnError = false,
 
-      /// If true the listen session will report partial results as they
-      /// are recognized. When false only the final results will be reported.
-      this.partialResults = true,
+    /// If true the listen session will report partial results as they
+    /// are recognized. When false only the final results will be reported.
+    this.partialResults = true,
 
-      /// If true the listen session will only use on device recognition. If
-      /// it cannot do this the listen attempt will fail. This is usually only
-      /// needed for sensitive content where privacy or security is a concern.
-      /// If false the listen session will use both on device and network
-      /// recognition.
-      this.onDevice = false,
+    /// If true the listen session will only use on device recognition. If
+    /// it cannot do this the listen attempt will fail. This is usually only
+    /// needed for sensitive content where privacy or security is a concern.
+    /// If false the listen session will use both on device and network
+    /// recognition.
+    this.onDevice = false,
 
-      /// The listen mode to use, currently only supported on iOS.
-      this.listenMode = ListenMode.confirmation,
+    /// The listen mode to use, currently only supported on iOS.
+    this.listenMode = ListenMode.confirmation,
 
-      /// The sample rate to use, currently only needed on iOS for some use
-      /// cases. Occasionally some devices crash with `sampleRate != device's
-      /// supported sampleRate`, try 44100 if seeing crashes.
-      this.sampleRate = 0,
+    /// The sample rate to use, currently only needed on iOS for some use
+    /// cases. Occasionally some devices crash with `sampleRate != device's
+    /// supported sampleRate`, try 44100 if seeing crashes.
+    this.sampleRate = 0,
 
-      /// If true the listen session will automatically add punctuation to
-      /// the recognized text. This is only supported on iOS.
-      this.autoPunctuation = false,
+    /// If true the listen session will automatically add punctuation to
+    /// the recognized text. This is only supported on iOS.
+    this.autoPunctuation = false,
 
-      /// If true haptic feedback will be enabled during the listen session.
-      /// Usually haptics are suppressed during speech recognition to avoid
-      /// interference with the microphone. Currently only supported on iOS.
-      this.enableHapticFeedback = false});
+    /// If true haptic feedback will be enabled during the listen session.
+    /// Usually haptics are suppressed during speech recognition to avoid
+    /// interference with the microphone. Currently only supported on iOS.
+    this.enableHapticFeedback = false,
+
+    /// An array of phrases that should be recognized, even if they are not
+    /// in the system vocabulary.\
+    /// Use this property to specify short custom phrases that are unique
+    /// to your app.
+    this.contextualStrings = const [],
+  });
 
   SpeechListenOptions copyWith(
       {bool? cancelOnError,
@@ -112,8 +119,7 @@ class SpeechListenOptions {
         listenMode: listenMode ?? this.listenMode,
         sampleRate: sampleRate ?? this.sampleRate,
         autoPunctuation: autoPunctuation ?? this.autoPunctuation,
-        enableHapticFeedback:
-            enableHapticFeedback ?? this.enableHapticFeedback);
+        enableHapticFeedback: enableHapticFeedback ?? this.enableHapticFeedback);
   }
 }
 
@@ -175,8 +181,7 @@ abstract class SpeechToTextPlatform extends PlatformInterface {
   /// [debugLogging] controls whether there is detailed logging from the underlying
   /// plugins. It is off by default, usually only useful for troubleshooting issues
   /// with a particular OS version or device, fairly verbose
-  Future<bool> initialize(
-      {debugLogging = false, List<SpeechConfigOption>? options}) {
+  Future<bool> initialize({debugLogging = false, List<SpeechConfigOption>? options}) {
     throw UnimplementedError('initialize() has not been implemented.');
   }
 
@@ -233,11 +238,9 @@ abstract class SpeechToTextPlatform extends PlatformInterface {
   ///
   Future<bool> listen(
       {String? localeId,
-      @Deprecated('Use SpeechListenOptions.partialResults instead')
-      partialResults = true,
+      @Deprecated('Use SpeechListenOptions.partialResults instead') partialResults = true,
       @Deprecated('Use SpeechListenOptions.onDevice instead') onDevice = false,
-      @Deprecated('Use SpeechListenOptions.listenMode instead')
-      int listenMode = 0,
+      @Deprecated('Use SpeechListenOptions.listenMode instead') int listenMode = 0,
       @Deprecated('Use SpeechListenOptions.sampleRate instead') sampleRate = 0,
       SpeechListenOptions? options}) {
     throw UnimplementedError('listen() has not been implemented.');
